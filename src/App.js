@@ -54,6 +54,12 @@ function App() {
         console.log(err.message);
       });
   };
+  const handleChange = (event) => {
+    console.log(event.target.name, event.target.value);
+  };
+  const handleSubmit = () => {
+    console.log();
+  };
   return (
     <div className="App">
       {user.isSignedIn ? (
@@ -68,6 +74,27 @@ function App() {
           <p>Email: {user.email}</p>
         </div>
       )}
+
+      <h1>Our own Authentication</h1>
+      <form onSubmit={handleSubmit}>
+        <input
+          type="text"
+          name="email"
+          onChange={handleChange}
+          placeholder="Email"
+          required
+        />
+        <br />
+        <input
+          type="password"
+          name="password"
+          onChange={handleChange}
+          placeholder="Password"
+          required
+        />
+        <br />
+        <input type="submit" value="Submit" />
+      </form>
     </div>
   );
 }
