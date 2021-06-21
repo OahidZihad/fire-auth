@@ -54,7 +54,7 @@ function App() {
         console.log(err.message);
       });
   };
-  const handleChange = (event) => {
+  const handleBlur = (event) => {
     console.log(event.target.name, event.target.value);
   };
   const handleSubmit = () => {
@@ -80,7 +80,8 @@ function App() {
         <input
           type="text"
           name="email"
-          onChange={handleChange}
+          // onChange={handleChange}
+          onBlur={handleBlur}
           placeholder="Email"
           required
         />
@@ -88,7 +89,7 @@ function App() {
         <input
           type="password"
           name="password"
-          onChange={handleChange}
+          onBlur={handleBlur}
           placeholder="Password"
           required
         />
