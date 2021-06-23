@@ -47,6 +47,8 @@ function App() {
           name: "",
           photo: "",
           email: "",
+          error: "",
+          success: false,
         };
         setUser(signedOutUser);
       })
@@ -71,8 +73,32 @@ function App() {
       setUser(newUserInfo);
     }
   };
-  const handleSubmit = () => {
-    console.log();
+  const handleSubmit = (event) => {
+    console.log(user.email, user.password);
+    if (user.email && user.password) {
+      firebase
+        .auth()
+        .createUserWithEmailAndPassword(user.email, user.password)
+        .then((res) => {
+          console.log(res);
+          const newUserInfo = { ...user };
+          newUserInfo.error = "";
+          newUserInfo.success = true;
+          setUser(newUserInfo);
+          // var user = userCredential.user;
+        })
+        .catch((error) => {
+          const newUserInfo = { ...user };
+          newUserInfo.error = error.message;
+          newUserInfo.success = false;
+          setUser(newUserInfo);
+          // var errorCode = error.code;
+          // var errorMessage = error.message;
+          // console.log(errorCode, errorMessage);
+        });
+    }
+    event.preventDefault(); // submit korar por page reload hoy...
+    // sei reload k bondho kortei preventDefault() function use kora hoy
   };
   return (
     <div className="App">
@@ -90,9 +116,6 @@ function App() {
       )}
 
       <h1>Our own Authentication</h1>
-      <p>Name: {user.name}</p>
-      <p>Email: {user.email}</p>
-      <p>Password: {user.password}</p>
       <form onSubmit={handleSubmit}>
         <input
           name="name"
@@ -122,6 +145,10 @@ function App() {
         <br />
         <input type="submit" value="Submit" />
       </form>
+      <p style={{ color: "red" }}>{user.error}</p>
+      {user.success && (
+        <p style={{ color: "green" }}>User Created Successfully</p>
+      )}
     </div>
   );
 }
