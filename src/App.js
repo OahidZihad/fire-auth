@@ -86,6 +86,7 @@ function App() {
           newUserInfo.error = "";
           newUserInfo.success = true;
           setUser(newUserInfo);
+          updateUserName(user.name);
           // var user = userCredential.user;
         })
         .catch((error) => {
@@ -108,6 +109,7 @@ function App() {
           newUserInfo.error = "";
           newUserInfo.success = true;
           setUser(newUserInfo);
+          console.log("sign in user info", res.user);
         })
         .catch((error) => {
           const newUserInfo = { ...user };
@@ -119,6 +121,21 @@ function App() {
     event.preventDefault(); // submit korar por page reload hoy...
     // sei reload k bondho kortei preventDefault() function use kora hoy
   };
+
+  const updateUserName = (name) => {
+    const user = firebase.auth().currentUser;
+    user
+      .updateProfile({
+        displayName: name,
+      })
+      .then(() => {
+        console.log("successfull");
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+  };
+
   return (
     <div className="App">
       {user.isSignedIn ? (
@@ -171,7 +188,7 @@ function App() {
           required
         />
         <br />
-        <input type="submit" value="Submit" />
+        <input type="submit" value={newUser ? "Sign Up" : "Sign In"} />
       </form>
       <p style={{ color: "red" }}>{user.error}</p>
       {user.success && (
