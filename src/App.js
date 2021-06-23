@@ -16,11 +16,12 @@ function App() {
     photo: "",
   });
 
-  const provider = new firebase.auth.GoogleAuthProvider();
+  const googleProvider = new firebase.auth.GoogleAuthProvider();
+  const fbProvider = new firebase.auth.FacebookAuthProvider();
   const handleSignIn = () => {
     firebase
       .auth()
-      .signInWithPopup(provider)
+      .signInWithPopup(googleProvider)
       .then((res) => {
         const { displayName, photoURL, email } = res.user;
         const signedInUser = {
@@ -37,6 +38,46 @@ function App() {
         console.log(err.message);
       });
   };
+
+  const handleFbSignIn = () => {
+    firebase
+      .auth()
+      .signInWithPopup(fbProvider)
+      .then((result) => {
+        const { displayName, photoURL, email } = result.user;
+        const signedInUser = {
+          isSignedIn: true,
+          name: displayName,
+          email: email,
+          photo: photoURL,
+        };
+        setUser(signedInUser);
+        console.log(displayName, email, photoURL);
+        /** @type {firebase.auth.OAuthCredential} */
+        var credential = result.credential;
+
+        // The signed-in user info.
+        var user = result.user;
+
+        // This gives you a Facebook Access Token. You can use it to access the Facebook API.
+        var accessToken = credential.accessToken;
+        console.log("login user info after sign in", user);
+        // ...
+      })
+      .catch((error) => {
+        // Handle Errors here.
+        var errorCode = error.code;
+        console.log(errorCode);
+        var errorMessage = error.message;
+        console.log(errorMessage);
+        // The email of the user's account used.
+        var email = error.email;
+        // The firebase.auth.AuthCredential type that was used.
+        var credential = error.credential;
+        // ...
+      });
+  };
+
   const handleSignOut = () => {
     firebase
       .auth()
@@ -143,6 +184,9 @@ function App() {
       ) : (
         <button onClick={handleSignIn}>Sign in</button>
       )}
+      <br />
+      <br />
+      <button onClick={handleFbSignIn}>Sign in using facebook</button>
       {user.isSignedIn && (
         <div>
           <img src={user.photo} alt=""></img>
